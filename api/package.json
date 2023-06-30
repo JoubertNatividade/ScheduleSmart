@@ -1,0 +1,19 @@
+{
+  "name": "ScheduleSmart",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@jngithub:JoubertNatividade/ScheduleSmart.git",
+  "author": "Joubert Natividade <jnatividade@intruderlabs.com.br>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.6"
+  }
+}
