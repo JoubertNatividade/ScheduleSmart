@@ -6,7 +6,7 @@
   "author": "Joubert Natividade <jnatividade@intruderlabs.com.br>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/server.ts"
+    "dev": "ts-node-dev --transpile-only --inspect --ignore-watch node_modules src/server.ts"
   },
   "dependencies": {
     "@prisma/client": "4.16.2",
@@ -19,6 +19,7 @@
     "aws-sdk": "^2.1420.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
+    "date-fns": "^2.30.0",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.1",
