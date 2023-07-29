@@ -49,6 +49,23 @@ class ScheduleRepository {
     })
     return result
   }
+  async findById(id: string) {
+    const result = await prisma.schedule.findUnique({
+      where:{ 
+        id,
+      }
+    })
+    return result
+  }
+
+  async delete(id: string) {
+    await prisma.schedule.delete({
+      where: {
+        id,
+      }
+    })  
+    return
+  }
 }
 
 export {ScheduleRepository}

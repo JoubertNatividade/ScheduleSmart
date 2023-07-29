@@ -43,6 +43,17 @@ class ScheduleController {
       next(err)
     }
   }
+
+  async delete(request: Request, response:Response, next:NextFunction) {
+    const {id} = request.params
+    console.log("🚀 ~ file: ScheduleController.ts:49 ~ ScheduleController ~ delete ~ id:", id)
+    try {
+      await this.scheduleService.delete(id)
+      return response.status(200)
+    }catch (err) {
+      next(err)
+    }
+  }
 }
 
 

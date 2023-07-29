@@ -51,6 +51,15 @@ class ScheduleService {
     return result
   }
 
+  async delete(id: string) {
+    const schedule = await this.scheduleRepository.findById(id)
+    if(!schedule) {
+      throw new Error("Schedule not found!")
+    }
+    await this.scheduleRepository.delete(id)
+    return
+  }
+
 }
 
 

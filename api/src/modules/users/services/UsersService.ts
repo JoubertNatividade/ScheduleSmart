@@ -31,8 +31,12 @@ export class UsersService {
     })
     return {
       token,
-      name: findUser.name,
-      email: findUser.email
+      user :{
+        name: findUser.name,
+        email: findUser.email,
+        avatar_url: findUser.avatar_url
+      }
+      
     }
   }
   async create({ name, email, password}: IUser) {
