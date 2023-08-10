@@ -1,29 +1,59 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { ISignIn } from "../pages/Interfaces";
 import { SignInService } from "../service/userService";
 import { toast } from "react-toastify";
 import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { api } from "../service/api";
 
 interface IAuthProvider {
   children : ReactNode
 }
-interface IAuthContextData{ 
+interface IAuthContextData{   
   signIn : ({ email, password}: ISignIn) => void
   logout :()=> void
   user: IUserData
   scheduleAvailable: Array<string>
+  schedules : Array<ISchedule>
+  date: string
+  handleSetDate: (date: string) => void
+  isAuthenticated: boolean;
 }
 interface IUserData {
   name: string
   email: string
   password: string
 }
+export interface ISchedule {
+  id: string
+  name: string
+  phone: string
+  date : string
+  user_id: string
+
+}
 
 export const AuthContext = createContext({} as IAuthContextData)
 
 export function AuthProvider ({children}: IAuthProvider) {
+  const navigate = useNavigate()
 
+  const [schedules, setSchedules] = useState<Array<ISchedule>>([])
+  const [date, setDate] = useState('')
+ 
+  const scheduleAvailable = [
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+  ] 
   const [user, setUser] = useState(()=> {
     const user = localStorage.getItem("userStorage")
     if (user) {
@@ -31,12 +61,23 @@ export function AuthProvider ({children}: IAuthProvider) {
     }
     return {}
   })
-  const scheduleAvailable = [
-    '09:00', '10:00', '11:00', '12:00', 
-    '13:00', '12:00', '13:00','14:00', 
-    '15:00', '16:00','17:00','18:00'
-  ]
-  const navigate = useNavigate()
+  const handleSetDate = (date: string) => {
+    setDate(date)
+  }
+  useEffect(() => {
+    api.get('/schedule', {
+      params: {
+        date,
+      }, 
+    }).then((response) => {
+    setSchedules(response.data)
+    }).catch((error) => {
+      console.log("🚀 ~ file: index.tsx:47 ~ useEffect ~ error:", error)
+    })
+  },[date])
+
+  const isAuthenticated = !!user && Object.keys(user).length !== 0;
+
   async function signIn({email, password}: ISignIn) {
     try {
       const {data} = await SignInService({email, password})
@@ -61,11 +102,11 @@ export function AuthProvider ({children}: IAuthProvider) {
    
   async function logout(){
     localStorage.removeItem("tokenStorage")
-    localStorage.removeItem("userStorage")
+    localStorage.removeItem("userStorage")  
     navigate("/")
   }
   return (
-    <AuthContext.Provider value={{signIn,logout, user , scheduleAvailable}}>
+    <AuthContext.Provider value={{signIn,logout, user , scheduleAvailable, schedules, date, handleSetDate, isAuthenticated}}>
       {children}
     </AuthContext.Provider>
   )

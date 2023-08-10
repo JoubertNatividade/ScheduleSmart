@@ -12,28 +12,29 @@ import {
 import 'react-day-picker/dist/style.css'
 import { Card } from "../../components/Card"
 import { useEffect, useState } from "react"
-import {  ptBR } from "date-fns/locale"
+import {  id, ptBR } from "date-fns/locale"
 import { format, isToday } from "date-fns"
 import { api } from "../../service/api"
-import { ISchedule } from "./ISchedule"
-import { Modal } from "../../components/Modal"
+import { ISchedule } from "../../context/AuthContext"
 
 export const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [schedules, setSchedules] = useState<Array<ISchedule>>([])
   const { user} = useAuth()
+
   const isWeekend = (date: Date) => {
     const day = date.getDay()
     return day == 0 || day ==6;
   }
+
   const isWeekDay = (date: Date) => {
-    const day = date.getDate()
+    const day = date.getDay()
     return day != 0 && day != 6
   }
+
   const handleDayClick = ( date: Date ) => {
     setDate(date)
   }
-
 
   useEffect(() => {
     api.get('/schedule', {
@@ -46,8 +47,6 @@ export const Dashboard = () => {
       console.log("🚀 ~ file: index.tsx:47 ~ useEffect ~ error:", error)
     })
   },[date])
-
-
 
   return (
     <Container>
@@ -63,15 +62,14 @@ export const Dashboard = () => {
           <ScheduleStyles>
 
             {
-              schedules.map(({id,name,date, phone, user_id }, index) => {
+              schedules.map((schedule, index) => {
                 return(
                   <Card 
                     key={index}
-                    id={id}
-                    name={name}
-                    date={date}
-                    phone={phone}
-                    user_id={id}
+                    date={schedule.date}
+                    name={schedule.name}
+                    phone={schedule.phone}
+                    id={schedule.id}
                   />
                 )
               })
@@ -91,8 +89,8 @@ export const Dashboard = () => {
               }}
               onDayClick={handleDayClick}
               locale={ptBR}
-              disabled={isWeekend}
               fromMonth={new Date()}
+              disabled={[isWeekend, { before: new Date() }]}
             />
           </DayStyles>
         </NextHour>     
